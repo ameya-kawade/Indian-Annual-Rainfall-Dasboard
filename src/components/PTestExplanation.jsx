@@ -29,32 +29,36 @@ const PTestExplanation = ({ result }) => {
         <Step 
           number="1" 
           title="State the Hypotheses"
-          description={`We start with an assumption called the Null Hypothesis (H₀). In our case, H₀: Rainfall ≤ ${result.threshold}mm. We want to see if we have enough evidence to support the Alternative Hypothesis (H₁): Rainfall > ${result.threshold}mm.`}
+          description="The Null Hypothesis (H₀) assumes there is no significant difference, while the Alternative Hypothesis (H₁) represents the claim we are testing."
+          formula={`H₀: μ ≤ ${result.threshold}, H₁: μ > ${result.threshold}`}
         />
         
         <Step 
           number="2" 
           title="Calculate the Sample Mean"
-          description={`From our ${result.n} years of data, we found an average (mean) of ${result.mean.toFixed(2)}mm.`}
+          description="The average rainfall is calculated by summing all annual records and dividing by the number of years."
+          formula={`x̄ = Σx / n = ${result.mean.toFixed(2)}mm`}
         />
 
         <Step 
           number="3" 
           title="Standard Error (SE)"
-          description="Rainfall varies every year. Standard Error tells us how much our sample mean might differ from the actual long-term population mean. It's calculated using the variation (SD) and sample size (n)."
+          description="Standard Error measures how much the sample mean is expected to vary from the actual population mean, based on the standard deviation (SD) and sample size (n)."
           formula={`SE = SD / √n = ${result.sd.toFixed(2)} / √${result.n} = ${result.se.toFixed(2)}`}
         />
 
         <Step 
           number="4" 
           title="T-Statistic"
-          description="This score tells us how many standard errors our sample mean is away from our threshold. A higher T-score means more evidence that the rainfall is truly higher."
-          formula={`T = (Mean - Threshold) / SE = (${result.mean.toFixed(2)} - ${result.threshold}) / ${result.se.toFixed(2)} = ${result.tStat.toFixed(2)}`}
+          description="The T-score represents how many standard errors the sample mean is away from the threshold. A larger T-score provides stronger evidence against the Null Hypothesis."
+          formula={`T = (x̄ - μ₀) / SE = (${result.mean.toFixed(2)} - ${result.threshold}) / ${result.se.toFixed(2)} = ${result.tStat.toFixed(2)}`}
         />
 
         <Step 
           number="5" 
-          formula={`P-Value = ${formatPValue(result.pValue)}`}
+          title="Determine the P-Value"
+          description="We use an exponential function to calculate the probability (p-value) based on our T-score. This tells us how likely the result is to be a random fluke."
+          formula={`P ≈ 1 / (1 + e^(1.654 * ${result.tStat.toFixed(2)})) = ${formatPValue(result.pValue)}`}
         />
       </div>
 
@@ -72,8 +76,8 @@ const PTestExplanation = ({ result }) => {
         </h4>
         <p style={{ marginTop: '0.5rem', fontSize: '0.95rem', lineHeight: 1.5 }}>
           {result.isSignificant 
-            ? `Since the p-value (${formatPValue(result.pValue)}) is less than 0.05, we reject the Null Hypothesis. There is strong evidence that this region receives significantly more than ${result.threshold}mm of annual rainfall.`
-            : `Since the p-value (${formatPValue(result.pValue)}) is greater than 0.05, we fail to reject the Null Hypothesis. The observed mean of ${result.mean.toFixed(2)}mm could be due to natural yearly variation.`
+            ? `The p-value (${formatPValue(result.pValue)}) is below the 0.05 threshold. This indicates that the observed rainfall of ${result.mean.toFixed(2)}mm is significantly higher than ${result.threshold}mm and is unlikely to be due to chance.`
+            : `The p-value (${formatPValue(result.pValue)}) is above 0.05. This means there isn't enough evidence to conclude that the rainfall is significantly higher than ${result.threshold}mm; the results may be due to natural variation.`
           }
         </p>
       </div>

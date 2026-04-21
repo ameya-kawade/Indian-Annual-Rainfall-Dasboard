@@ -40,7 +40,13 @@ export const getSubdivisionData = (csvData, subdivision) => {
       year: parseInt(row.YEAR), 
       rainfall: parseFloat(row.ANNUAL) 
     })).filter(d => !isNaN(d.rainfall)),
-    monthlyAverages
+    monthlyAverages,
+    coverage: {
+      n: annual.length,
+      expected: 115, // 1901-2015
+      percent: (annual.length / 115) * 100,
+      missing: 115 - annual.length
+    }
   };
 };
 
@@ -127,11 +133,15 @@ export const performPTest = (data, threshold = 1200) => {
   };
 };
 
-// Simple approximation for T-distribution CDF
+/**
+ * Simplified P-value calculation
+ * Uses a simpler approximation for the Normal Distribution.
+ * This is easier to read and works well for large sample sizes like ours (n=115).
+ */
 function tCumulativeDistribution(t, df) {
-  // A very rough approximation for p-value presentation purposes
-  // In a production app, use 'jstat' or similar.
-  const x = df / (df + t * t);
-  if (t > 0) return 1 - 0.5 * Math.pow(x, df / 2);
-  return 0.5 * Math.pow(x, df / 2);
+  const z = t;
+  // A simple but effective approximation for the Bell Curve area
+  // Formula: 1 / (1 + exp(-1.654 * z))
+  const p = 1 / (1 + Math.exp(-1.654 * z));
+  return p;
 }

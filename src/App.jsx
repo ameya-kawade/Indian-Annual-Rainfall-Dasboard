@@ -125,9 +125,32 @@ const App = () => {
           </button>
         </nav>
 
-        <div style={{ marginTop: 'auto', padding: '1rem', background: '#f8fafc', borderRadius: '8px', border: '1px solid var(--border)' }}>
-          <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Dataset Period</p>
-          <p style={{ fontSize: '0.875rem', fontWeight: 600 }}>1901 — 2015</p>
+        <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <div style={{ padding: '1rem', background: '#f8fafc', borderRadius: '8px', border: '1px solid var(--border)' }}>
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>Data Integrity</p>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.875rem', fontWeight: 600 }}>{subData?.coverage.n} / 115 Yrs</span>
+              <span style={{ 
+                fontSize: '0.7rem', 
+                padding: '2px 6px', 
+                borderRadius: '4px', 
+                background: subData?.coverage.percent === 100 ? '#dcfce7' : '#fee2e2',
+                color: subData?.coverage.percent === 100 ? '#166534' : '#991b1b'
+              }}>
+                {subData?.coverage.percent.toFixed(0)}%
+              </span>
+            </div>
+            {subData?.coverage.missing > 0 && (
+              <p style={{ fontSize: '0.7rem', color: '#991b1b', marginTop: '0.4rem' }}>
+                ⚠️ {subData.coverage.missing} year(s) missing in dataset
+              </p>
+            )}
+          </div>
+
+          <div style={{ padding: '1rem', background: '#f8fafc', borderRadius: '8px', border: '1px solid var(--border)' }}>
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Dataset Period</p>
+            <p style={{ fontSize: '0.875rem', fontWeight: 600 }}>1901 — 2015</p>
+          </div>
         </div>
       </aside>
 
