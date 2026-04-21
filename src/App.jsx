@@ -32,10 +32,7 @@ const App = () => {
     const loadData = async () => {
       try {
         const response = await fetch(`${import.meta.env.BASE_URL}rainfall in india 1901-2015.csv`);
-        const reader = response.body.getReader();
-        const result = await reader.read();
-        const decoder = new TextDecoder('utf-8');
-        const csv = decoder.decode(result.value);
+        const csv = await response.text();
         
         Papa.parse(csv, {
           header: true,
