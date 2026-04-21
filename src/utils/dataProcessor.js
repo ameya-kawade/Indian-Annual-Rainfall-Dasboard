@@ -109,7 +109,10 @@ export const performPTest = (data, threshold = 1200) => {
   // but we can use a normal approximation for large n or a simple approximation.
   // For better accuracy in a real app we'd use a math library with t-dist.
   // Here we'll use an approximation for the p-value.
-  const pValue = 1 - tCumulativeDistribution(tStat, df);
+  let pValue = 1 - tCumulativeDistribution(tStat, df);
+
+  // Ensure p-value stays within [0, 1] bounds
+  pValue = Math.max(0, Math.min(1, pValue || 0));
 
   return {
     n,

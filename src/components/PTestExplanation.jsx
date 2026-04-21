@@ -5,6 +5,12 @@ import { Info, CheckCircle, HelpCircle } from 'lucide-react';
 const PTestExplanation = ({ result }) => {
   if (!result) return null;
 
+  const formatPValue = (p) => {
+    if (p < 0.0001) return "< 0.0001";
+    if (p > 0.9999) return "> 0.9999";
+    return p.toFixed(4);
+  };
+
   return (
     <motion.div 
       className="p-test-card"
@@ -48,9 +54,7 @@ const PTestExplanation = ({ result }) => {
 
         <Step 
           number="5" 
-          title="Determine the P-Value"
-          description="The P-value is the probability that we would see this result just by random chance. If it's very small (usually less than 0.05 or 5%), we say the result is 'Statistically Significant'."
-          formula={`P-Value = ${result.pValue.toFixed(4)}`}
+          formula={`P-Value = ${formatPValue(result.pValue)}`}
         />
       </div>
 
@@ -66,10 +70,10 @@ const PTestExplanation = ({ result }) => {
           {result.isSignificant ? <CheckCircle size={20} /> : <Info size={20} />}
           Conclusion: {result.isSignificant ? 'Significant Result' : 'Not Significant'}
         </h4>
-        <p style={{ marginTop: '0.5rem', fontSize: '0.95rem' }}>
+        <p style={{ marginTop: '0.5rem', fontSize: '0.95rem', lineHeight: 1.5 }}>
           {result.isSignificant 
-            ? `Since the p-value (${result.pValue.toFixed(4)}) is less than 0.05, we reject the Null Hypothesis. There is strong evidence that this region receives significantly more than ${result.threshold}mm of annual rainfall.`
-            : `Since the p-value (${result.pValue.toFixed(4)}) is greater than 0.05, we fail to reject the Null Hypothesis. The observed mean of ${result.mean.toFixed(2)}mm could be due to natural yearly variation.`
+            ? `Since the p-value (${formatPValue(result.pValue)}) is less than 0.05, we reject the Null Hypothesis. There is strong evidence that this region receives significantly more than ${result.threshold}mm of annual rainfall.`
+            : `Since the p-value (${formatPValue(result.pValue)}) is greater than 0.05, we fail to reject the Null Hypothesis. The observed mean of ${result.mean.toFixed(2)}mm could be due to natural yearly variation.`
           }
         </p>
       </div>
